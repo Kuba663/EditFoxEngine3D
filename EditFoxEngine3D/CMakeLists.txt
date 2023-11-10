@@ -7,6 +7,6 @@ find_package(Vulkan REQUIRED)
 
 # Dodaj źródło do pliku wykonywalnego tego projektu.
 add_executable (EditFoxEngine3D "EditFoxEngine3D.cpp" "EditFoxEngine3D.h")
-
+add_dependencies(EditFoxEngine3D GLFW)
 # TODO: Dodaj testy i zainstaluj elementy docelowe w razie potrzeby.
-target_link_libraries(EditFoxEngine3D PRIVATE Vulkan::Vulkan)
+target_link_libraries(EditFoxEngine3D PRIVATE Vulkan::Vulkan ${BINARY_DIR}/glfw3.lib)
