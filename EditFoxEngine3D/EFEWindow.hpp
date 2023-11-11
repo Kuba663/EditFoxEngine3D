@@ -6,13 +6,13 @@
 #include <string>
 
 NS(EFE) {
-	class EFEWindow {
+	class Window {
 	public:
-		EFEWindow(int width, int height, std::string windowName);
-		~EFEWindow();
+		Window(int width, int height, std::string windowName);
+		~Window();
 
-		EFEWindow(const EFEWindow&) = delete;
-		void operator=(const EFEWindow&) = delete;
+		Window(const Window&) = delete;
+		void operator=(const Window&) = delete;
 
 		inline bool shouldClose() const {
 			return glfwWindowShouldClose(this->window);
