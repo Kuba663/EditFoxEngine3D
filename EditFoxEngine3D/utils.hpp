@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 std::vector<char> readFileToVector(const std::string& fileName) {
-	std::ifstream file{ filepath, std::ios::ate | std::ios::binary };
+	std::ifstream file{ fileName, std::ios::ate | std::ios::binary };
 	
 	if (!file.is_open()) throw new std::runtime_error("Nie mo¿na otworzyæ pliku " + fileName);
 	
