@@ -12,7 +12,6 @@ NS(EFE) {
 			VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 			VkRect2D scissor;
 			VkPipelineViewportStateCreateInfo viewportInfo;
-			VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 			VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 			VkPipelineMultisampleStateCreateInfo multisampleInfo;
 			VkPipelineColorBlendAttachmentState colorBlendAttachment;

@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 find_package(Vulkan REQUIRED)
 
 # Dodaj źródło do pliku wykonywalnego tego projektu.
-add_executable (EditFoxEngine3D "EditFoxEngine3D.cpp" "EditFoxEngine3D.h" "EFEWindow.hpp" "macros.h" "EFEWindow.cxx" "EFEPipeline.hpp" "utils.hpp" "EFEPipeline.cpp" "EFEDevice.hpp" "EFEDevice.cpp" "vma.cpp")
+add_executable (EditFoxEngine3D "EditFoxEngine3D.cpp" "EditFoxEngine3D.h" "EFEWindow.hpp" "macros.h" "EFEWindow.cxx" "EFEPipeline.hpp" "utils.hpp" "EFEPipeline.cpp" "EFEDevice.hpp" "EFEDevice.cpp" "vma.cpp" "EFESwapChain.cxx")
 add_dependencies(EditFoxEngine3D glfw)
 # TODO: Dodaj testy i zainstaluj elementy docelowe w razie potrzeby.
 target_link_libraries(EditFoxEngine3D PRIVATE Vulkan::Vulkan glfw GPUOpen::VulkanMemoryAllocator)

@@ -59,9 +59,9 @@ NS(EFE) {
 			void createBuffer(
 				VkDeviceSize size,
 				VkBufferUsageFlags usage,
-				VkMemoryPropertyFlags properties,
 				VkBuffer& buffer,
-				VkDeviceMemory& bufferMemory);
+				VkDeviceMemory& bufferMemory,
+				VmaAllocation& allocation);
 			VkCommandBuffer beginSingleTimeCommands();
 			void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 			void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -70,11 +70,14 @@ NS(EFE) {
 
 			void createImageWithInfo(
 				const VkImageCreateInfo& imageInfo,
-				VkMemoryPropertyFlags properties,
 				VkImage& image,
-				VkDeviceMemory& imageMemory);
+				VmaAllocation& allocation);
 
 			VkPhysicalDeviceProperties properties;
+
+			inline void destroyImage(VkImage& image, VmaAllocation& allocation) {
+				vmaDestroyImage(allocator, image, allocation);
+			}
 
 		private:
 			void createInstance();
