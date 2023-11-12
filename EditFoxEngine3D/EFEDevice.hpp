@@ -79,6 +79,10 @@ NS(EFE) {
 				vmaDestroyImage(allocator, image, allocation);
 			}
 
+			inline void destroyBuffer(VkBuffer& buffer, VmaAllocation& allocation) {
+				vmaDestroyBuffer(allocator, buffer, allocation);
+			}
+
 		private:
 			void createInstance();
 			void setupDebugMessenger();
