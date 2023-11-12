@@ -4,5 +4,41 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
+#include <vector>
 
-// TODO: W tym miejscu przywołaj dodatkowe nagłówki wymagane przez program.
+#include "EFEWindow.hpp"
+#include "EFESwapChain.hpp"
+#include "EFEPipeline.hpp"
+#include "EFEDevice.hpp"
+#include "macros.h"
+
+using NS(EFE::render);
+
+NS(EFE) {
+	class Engine {
+	public:
+		Engine(int width, int height, std::string title);
+		~Engine();
+
+		Engine(const Engine&) = delete;
+		void operator=(const Engine&) = delete;
+
+		void run();
+
+		const int width, height;
+		const std::string title;
+	private:
+		void createPipelineLayout();
+		void createPipeline();
+		void createCommandBuffers();
+		void drawFrame();
+
+		Window window{ width, height, title };
+		Device device{ window };
+		SwapChain swapChain{ device, {static_cast<uint32_t>(width), static_cast<uint32_t>(height)} };
+		std::unique_ptr<Pipeline> pipeline;
+		VkPipelineLayout pipelineLayout;
+		std::vector<VkCommandBuffer> commandBuffers;
+	};
+}
