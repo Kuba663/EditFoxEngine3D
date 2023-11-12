@@ -59,7 +59,7 @@ void Engine::createCommandBuffers() {
 		VkRenderPassBeginInfo passInfo{};
 		passInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		passInfo.renderPass = swapChain.getRenderPass();
-		passInfo.framebuffer = swapChain.getFrameBuffer();
+		passInfo.framebuffer = swapChain.getFrameBuffer(i);
 		passInfo.renderArea = { {0,0}, swapChain.getSwapChainExtent() };
 
 	}
