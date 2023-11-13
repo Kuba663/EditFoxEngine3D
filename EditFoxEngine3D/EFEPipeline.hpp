@@ -29,6 +29,8 @@ NS(EFE) {
 			Pipeline(const Pipeline&) = delete;
 			void operator=(const Pipeline&) = delete;
 
+			inline void bind(VkCommandBuffer cmdBuffer) { vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, this->graphicsPipeline); }
+
 			static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
 
 		private:
