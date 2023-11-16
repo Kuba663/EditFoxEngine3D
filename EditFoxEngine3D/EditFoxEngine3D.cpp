@@ -1,6 +1,6 @@
 ﻿// EditFoxEngine3D.cpp: definiuje punkt wejścia dla aplikacji.
 //
-
+#define NDEBUG
 #include "EditFoxEngine3D.h"
 
 using namespace std;
@@ -9,7 +9,13 @@ using EFE::Engine;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	try {
+		Engine engine{ 1600, 800, "Test" };
+		engine.run();
+	}
+	catch (const std::exception& e) {
+		cerr << e.what() << endl;
+	}
 	return 0;
 }
 
@@ -19,14 +25,17 @@ Engine::Engine(int width, int height, std::string title)
 	createPipelineLayout();
 	createPipeline();
 	createCommandBuffers();
-	drawFrame();
 }
+
+Engine::~Engine() { vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr); }
 
 void Engine::run() {
 	while (!window.shouldClose()) {
 		glfwPollEvents();
 		drawFrame();
 	}
+
+	vkDeviceWaitIdle(device.device());
 }
 
 void Engine::createPipelineLayout() {
@@ -41,14 +50,16 @@ void Engine::createPipelineLayout() {
 
 void Engine::createPipeline()
 {
-	auto pipelineConfig = Pipeline::defaultPipelineConfigInfo(swapChain.width(), swapChain.height());
+	PipelineConfigInfo pipelineConfig{};
+	Pipeline::defaultPipelineConfigInfo(pipelineConfig, swapChain.width(), swapChain.height());
 	pipelineConfig.renderPass = swapChain.getRenderPass();
 	pipelineConfig.pipelineLayout = pipelineLayout;
-	this->pipeline = std::make_unique<Pipeline>(device, "", "", pipelineConfig);
+	this->pipeline = std::make_unique<Pipeline>(device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
 }
 
 void Engine::createCommandBuffers() {
-	commandBuffers.resize(swapChain.MAX_FRAMES_IN_FLIGHT);
+
+	commandBuffers.resize(swapChain.imageCount());
 
 	VkCommandBufferAllocateInfo	allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -89,7 +100,7 @@ void Engine::drawFrame() {
 	uint32_t imageIndex;
 	auto result = swapChain.acquireNextImage(&imageIndex);
 
-	if (result != VK_SUCCESS || result != VK_SUBOPTIMAL_KHR) throw new std::runtime_error("TMP ERROR");
+	if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) throw new std::runtime_error("TMP ERROR");
 
 	result = swapChain.submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex);
 

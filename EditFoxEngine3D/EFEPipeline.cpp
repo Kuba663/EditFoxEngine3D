@@ -2,6 +2,8 @@
 
 #include "utils.hpp"
 
+#include <cassert>
+
 #define CLASS Pipeline
 
 using EFE::render::CLASS;
@@ -18,11 +20,37 @@ CLASS::~Pipeline() {
 }
 
 void CLASS::createGraphicsPipeline(const std::string& vertShaderFilename, const std::string& fragShaderFilename, const PipelineConfigInfo& info) {
+
+	assert(
+		info.pipelineLayout != nullptr &&
+		"Cannot create graphics pipeline: no pipelineLayout provided in config info");
+	assert(
+		info.renderPass != nullptr &&
+		"Cannot create graphics pipeline: no renderPass provided in config info");
+
 	auto vertShader = readFileToVector(vertShaderFilename);
 	auto fragShader = readFileToVector(fragShaderFilename);
 
 	this->createShaderModule(vertShader, &vertShaderModule);
 	this->createShaderModule(fragShader, &fragShaderModule);
+
+	VkPipelineViewportStateCreateInfo viewportInfo{};
+	viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	viewportInfo.viewportCount = 1;
+	viewportInfo.pViewports = &info.viewport;
+	viewportInfo.scissorCount = 1;
+	viewportInfo.pScissors = &info.scissor;
+
+	VkPipelineColorBlendStateCreateInfo colorBlendInfo{};
+	colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	colorBlendInfo.logicOpEnable = VK_FALSE;
+	colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;  // Optional
+	colorBlendInfo.attachmentCount = 1;
+	colorBlendInfo.pAttachments = &info.colorBlendAttachment;
+	colorBlendInfo.blendConstants[0] = 0.0f;  // Optional
+	colorBlendInfo.blendConstants[1] = 0.0f;  // Optional
+	colorBlendInfo.blendConstants[2] = 0.0f;  // Optional
+	colorBlendInfo.blendConstants[3] = 0.0f;  // Optional
 
 	VkPipelineShaderStageCreateInfo shaderStages[2];
 	shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -53,9 +81,9 @@ void CLASS::createGraphicsPipeline(const std::string& vertShaderFilename, const 
 	pipelineInfo.pStages = shaderStages;
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &info.inputAssemblyInfo;
-	pipelineInfo.pViewportState = &info.viewportInfo;
+	pipelineInfo.pViewportState = &viewportInfo;
 	pipelineInfo.pRasterizationState = &info.rasterizationInfo;
-	pipelineInfo.pColorBlendState = &info.colorBlendInfo;
+	pipelineInfo.pColorBlendState = &colorBlendInfo;
 	pipelineInfo.pDepthStencilState = &info.depthStencilInfo;
 	pipelineInfo.pDynamicState = nullptr;
 
@@ -78,9 +106,7 @@ void CLASS::createShaderModule(const std::vector<char>& code, VkShaderModule* sh
 	if (vkCreateShaderModule(device.device(), &info, nullptr, shaderModule) != VK_SUCCESS) throw new std::runtime_error("Nie uda³o sie utworzyæ modu³u programu cieniuj¹cego");
 }
 
-EFE::render::PipelineConfigInfo CLASS::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
-	PipelineConfigInfo info{};
-
+void CLASS::defaultPipelineConfigInfo(PipelineConfigInfo& info, uint32_t width, uint32_t height) {
 	info.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	info.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 	info.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
@@ -94,12 +120,6 @@ EFE::render::PipelineConfigInfo CLASS::defaultPipelineConfigInfo(uint32_t width,
 
 	info.scissor.offset = { 0, 0 };
 	info.scissor.extent = { width, height };
-
-	info.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-	info.viewportInfo.viewportCount = 1;
-	info.viewportInfo.pViewports = &info.viewport;
-	info.viewportInfo.scissorCount = 1;
-	info.viewportInfo.pScissors = &info.scissor;
 
 	info.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	info.rasterizationInfo.depthClampEnable = VK_FALSE;
@@ -132,16 +152,6 @@ EFE::render::PipelineConfigInfo CLASS::defaultPipelineConfigInfo(uint32_t width,
 	info.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;  // Optional
 	info.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;              // Optional
 
-	info.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	info.colorBlendInfo.logicOpEnable = VK_FALSE;
-	info.colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;  // Optional
-	info.colorBlendInfo.attachmentCount = 1;
-	info.colorBlendInfo.pAttachments = &info.colorBlendAttachment;
-	info.colorBlendInfo.blendConstants[0] = 0.0f;  // Optional
-	info.colorBlendInfo.blendConstants[1] = 0.0f;  // Optional
-	info.colorBlendInfo.blendConstants[2] = 0.0f;  // Optional
-	info.colorBlendInfo.blendConstants[3] = 0.0f;  // Optional
-
 	info.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	info.depthStencilInfo.depthTestEnable = VK_TRUE;
 	info.depthStencilInfo.depthWriteEnable = VK_TRUE;
@@ -152,6 +162,4 @@ EFE::render::PipelineConfigInfo CLASS::defaultPipelineConfigInfo(uint32_t width,
 	info.depthStencilInfo.stencilTestEnable = VK_FALSE;
 	info.depthStencilInfo.front = {};  // Optional
 	info.depthStencilInfo.back = {};   // Optional
-
-	return info;
 }

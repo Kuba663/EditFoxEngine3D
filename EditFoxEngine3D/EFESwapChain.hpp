@@ -3,7 +3,6 @@
 
 #include "macros.h"
 #include "EFEDevice.hpp"
-#include <vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
 #include <string>
@@ -58,7 +57,7 @@ NS(EFE) {
 			VkRenderPass renderPass;
 
 			std::vector<VkImage> depthImages;
-			std::vector<VmaAllocation> depthImageMemories;
+			std::vector<VkDeviceMemory> depthImageMemories;
 			std::vector<VkImageView> depthImageViews;
 			std::vector<VkImage> swapChainImages;
 			std::vector<VkImageView> swapChainImageViews;

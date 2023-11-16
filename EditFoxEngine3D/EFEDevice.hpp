@@ -7,8 +7,6 @@
 #include <cstring>
 #include <unordered_set>
 
-#include <vk_mem_alloc.h>
-
 #include "EFEWindow.hpp"
 #include "macros.h"
 
@@ -59,9 +57,9 @@ NS(EFE) {
 			void createBuffer(
 				VkDeviceSize size,
 				VkBufferUsageFlags usage,
+				VkMemoryPropertyFlags properties,
 				VkBuffer& buffer,
-				VkDeviceMemory& bufferMemory,
-				VmaAllocation& allocation);
+				VkDeviceMemory& bufferMemory);
 			VkCommandBuffer beginSingleTimeCommands();
 			void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 			void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -70,18 +68,11 @@ NS(EFE) {
 
 			void createImageWithInfo(
 				const VkImageCreateInfo& imageInfo,
+				VkMemoryPropertyFlags properties,
 				VkImage& image,
-				VmaAllocation& allocation);
+				VkDeviceMemory& imageMemory) ;
 
 			VkPhysicalDeviceProperties properties;
-
-			inline void destroyImage(VkImage& image, VmaAllocation& allocation) {
-				vmaDestroyImage(allocator, image, allocation);
-			}
-
-			inline void destroyBuffer(VkBuffer& buffer, VmaAllocation& allocation) {
-				vmaDestroyBuffer(allocator, buffer, allocation);
-			}
 
 		private:
 			void createInstance();
@@ -112,8 +103,6 @@ NS(EFE) {
 			VkSurfaceKHR surface_;
 			VkQueue graphicsQueue_;
 			VkQueue presentQueue_;
-
-			VmaAllocator allocator;
 
 			const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 			const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };

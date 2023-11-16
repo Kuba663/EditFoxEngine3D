@@ -35,7 +35,8 @@ CLASS::~SwapChain() {
 
     for (int i = 0; i < depthImages.size(); i++) {
         vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
-        device.destroyImage(depthImages[i], depthImageMemories[i]);
+        vkDestroyImage(device.device(), depthImages[i], nullptr);
+        vkFreeMemory(device.device(), depthImageMemories[i], nullptr);
     }
 
     for (auto framebuffer : swapChainFramebuffers) {
@@ -315,6 +316,7 @@ void CLASS::createDepthResources() {
 
         device.createImageWithInfo(
             imageInfo,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             depthImages[i],
             depthImageMemories[i]);
 

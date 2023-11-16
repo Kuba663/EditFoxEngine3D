@@ -8,14 +8,16 @@
 NS(EFE) {
 	NS(render) {
 		struct PipelineConfigInfo {
+			PipelineConfigInfo() = default;
+			PipelineConfigInfo(const PipelineConfigInfo&) = delete;
+			PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+
 			VkViewport viewport;
 			VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 			VkRect2D scissor;
-			VkPipelineViewportStateCreateInfo viewportInfo;
 			VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 			VkPipelineMultisampleStateCreateInfo multisampleInfo;
 			VkPipelineColorBlendAttachmentState colorBlendAttachment;
-			VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 			VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
 			VkPipelineLayout pipelineLayout = nullptr;
 			VkRenderPass renderPass = nullptr;
@@ -31,7 +33,7 @@ NS(EFE) {
 
 			inline void bind(VkCommandBuffer cmdBuffer) { vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, this->graphicsPipeline); }
 
-			static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
+			static void defaultPipelineConfigInfo(PipelineConfigInfo& info, uint32_t width, uint32_t height);
 
 		private:
 			void createGraphicsPipeline(const std::string& vertShaderFilename, const std::string& fragShaderFilename, const PipelineConfigInfo& info);

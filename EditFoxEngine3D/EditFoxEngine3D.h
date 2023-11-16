@@ -7,10 +7,10 @@
 #include <memory>
 #include <vector>
 
+#include "EFEDevice.hpp"
 #include "EFEWindow.hpp"
 #include "EFESwapChain.hpp"
 #include "EFEPipeline.hpp"
-#include "EFEDevice.hpp"
 #include "macros.h"
 
 using NS(EFE::render);
