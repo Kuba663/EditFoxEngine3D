@@ -4,6 +4,7 @@
 #include "macros.h"
 #include <string>
 #include "EFEDevice.hpp"
+#include "EFEModel.hpp"
 
 NS(EFE) {
 	NS(render) {

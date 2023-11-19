@@ -22,6 +22,7 @@ int main()
 Engine::Engine(int width, int height, std::string title)
 	:width{ width }, height{ height }, title{ title }
 {
+	loadModels();
 	createPipelineLayout();
 	createPipeline();
 	createCommandBuffers();
@@ -36,6 +37,16 @@ void Engine::run() {
 	}
 
 	vkDeviceWaitIdle(device.device());
+}
+
+void EditFoxEngine::Engine::loadModels()
+{
+	std::vector<Model::Vertex> vertices{
+		{{0.0f, -0.5f, 0.0f}},
+		{{0.5f, 0.5f, 0.0f}},
+		{{-0.5f, 0.5f, 0.0f}}
+	};
+	model = std::make_unique<Model>(device, vertices);
 }
 
 void Engine::createPipelineLayout() {
@@ -89,7 +100,8 @@ void Engine::createCommandBuffers() {
 		vkCmdBeginRenderPass(commandBuffers[i], &passInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		pipeline->bind(commandBuffers[i]);
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+		model->bind(commandBuffers[i]);
+		model->draw(commandBuffers[i]);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) throw new std::runtime_error("Nie udało się zapisać bufora poleceń!");

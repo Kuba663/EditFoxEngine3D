@@ -6,10 +6,10 @@ cmake_minimum_required (VERSION 3.8)
 find_package(Vulkan REQUIRED)
 
 # Dodaj źródło do pliku wykonywalnego tego projektu.
-add_executable (EditFoxEngine3D "EditFoxEngine3D.cpp" "EFEWindow.cxx" "EFEPipeline.cpp" "EFEDevice.cpp" "EFESwapChain.cxx")
-add_dependencies(EditFoxEngine3D glfw GPUOpen::VulkanMemoryAllocator Vulkan::Vulkan)
+add_executable (EditFoxEngine3D "EditFoxEngine3D.cpp" "EFEWindow.cxx" "EFEPipeline.cpp" "EFEDevice.cpp" "EFESwapChain.cxx" "EFEModel.hpp" "EFEModel.cxx")
+add_dependencies(EditFoxEngine3D glfw Vulkan::Vulkan Eigen3::Eigen)
 # TODO: Dodaj testy i zainstaluj elementy docelowe w razie potrzeby.
-target_link_libraries(EditFoxEngine3D PRIVATE Vulkan::Vulkan glfw GPUOpen::VulkanMemoryAllocator)
+target_link_libraries(EditFoxEngine3D PRIVATE Vulkan::Vulkan glfw Eigen3::Eigen)
 
 #add_custom_target(Shaders ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/shaders" "${CMAKE_CURRENT_BINARY_DIR}/shaders/simple_shader.frag.spv" "${CMAKE_CURRENT_BINARY_DIR}/shaders/simple_shader.vert.spv")
 

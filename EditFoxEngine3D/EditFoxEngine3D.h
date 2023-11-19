@@ -12,6 +12,7 @@
 #include "EFESwapChain.hpp"
 #include "EFEPipeline.hpp"
 #include "macros.h"
+#include "EFEModel.hpp"
 
 using NS(EFE::render);
 
@@ -29,6 +30,7 @@ NS(EFE) {
 		const int width, height;
 		const std::string title;
 	private:
+		void loadModels();
 		void createPipelineLayout();
 		void createPipeline();
 		void createCommandBuffers();
@@ -40,5 +42,6 @@ NS(EFE) {
 		std::unique_ptr<Pipeline> pipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;
+		std::unique_ptr<Model> model;
 	};
 }
