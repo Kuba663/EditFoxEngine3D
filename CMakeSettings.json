@@ -10,7 +10,14 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "cmakeExecutable": "C:/Program Files/CMake/bin/cmake.exe"
+      "cmakeExecutable": "C:/Program Files/CMake/bin/cmake.exe",
+      "variables": [
+        {
+          "name": "SIMD_ARCH",
+          "value": "FMA3_AVX2",
+          "type": "STRING"
+        }
+      ]
     }
   ]
 }

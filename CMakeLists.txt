@@ -9,6 +9,7 @@ project ("EditFoxEngine3D")
 
 add_subdirectory("glfw")
 add_subdirectory("VulkanMemoryAllocator")
+add_subdirectory("eigen")
 
 # Uwzględnij podprojekty.
 add_subdirectory ("EditFoxEngine3D")
